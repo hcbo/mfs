@@ -41,7 +41,7 @@ public class NeuFileInputStream extends FSInputStream {
                     .retryPolicy(retryPolicy)
                     .sessionTimeoutMs(6000)
                     .connectionTimeoutMs(3000)
-                    .namespace("fileSize1")
+//                    .namespace("fileSize1")
                     .build();
             this.client.start();
         }
