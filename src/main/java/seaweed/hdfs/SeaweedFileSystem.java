@@ -36,7 +36,7 @@ public class SeaweedFileSystem extends org.apache.hadoop.fs.FileSystem {
 
     private URI uri;
     private Path workingDirectory = new Path("/");
-    private SeaweedFileSystemStore seaweedFileSystemStore;
+
 
     NeuUnderFileSystem neuUnderFileSystem;
 
@@ -286,9 +286,9 @@ public class SeaweedFileSystem extends org.apache.hadoop.fs.FileSystem {
     public void setOwner(Path path, final String owner, final String group)
             throws IOException {
         LOG.error("setOwner path: {}", path);
-        path = qualify(path);
-
-        seaweedFileSystemStore.setOwner(path, owner, group);
+//        path = qualify(path);
+//
+//        seaweedFileSystemStore.setOwner(path, owner, group);
     }
 
 
@@ -308,7 +308,7 @@ public class SeaweedFileSystem extends org.apache.hadoop.fs.FileSystem {
 
         path = qualify(path);
 
-        seaweedFileSystemStore.setPermission(path, permission);
+//        seaweedFileSystemStore.setPermission(path, permission);
     }
 
     Path qualify(Path path) {

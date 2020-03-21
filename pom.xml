@@ -19,12 +19,12 @@
         <version>9</version>
     </parent>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
+    <!--<distributionManagement>-->
+        <!--<snapshotRepository>-->
+            <!--<id>ossrh</id>-->
+            <!--<url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
+        <!--</snapshotRepository>-->
+    <!--</distributionManagement>-->
     <build>
         <plugins>
             <plugin>
@@ -181,11 +181,11 @@
 
         </dependency>
 
-        <dependency>
-            <groupId>com.github.chrislusf</groupId>
-            <artifactId>seaweedfs-client</artifactId>
-            <version>${seaweedfs.client.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.github.chrislusf</groupId>-->
+            <!--<artifactId>seaweedfs-client</artifactId>-->
+            <!--<version>${seaweedfs.client.version}</version>-->
+        <!--</dependency>-->
         <!--<dependency>-->
             <!--<groupId>org.apache.hadoop</groupId>-->
             <!--<artifactId>hadoop-common</artifactId>-->
