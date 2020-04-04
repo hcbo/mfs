@@ -28,7 +28,7 @@ public class NeuFileOutputStream extends OutputStream {
 
 
     public NeuFileOutputStream(CuratorFramework zkclient,String path,Producer<String, byte[]> produc) {
-        SeaweedFileSystem.LOG.error("NeuFileOutputStream构造方法调用");
+        MfsFileSystem.LOG.error("NeuFileOutputStream构造方法调用");
         this.client = zkclient;
         pathInfo = new PathInfo();
         pathInfo.name = path;
@@ -50,7 +50,7 @@ public class NeuFileOutputStream extends OutputStream {
 
         this.producer = produc;
 
-        SeaweedFileSystem.LOG.error("NeuFileOutputStream构造方法调用结束");
+        MfsFileSystem.LOG.error("NeuFileOutputStream构造方法调用结束");
     }
 
     @Override
@@ -63,7 +63,7 @@ public class NeuFileOutputStream extends OutputStream {
 
     @Override
     public void close() throws IOException {
-        SeaweedFileSystem.LOG.error("NeuFileOutputStream.close()调用:"+"pathInfo.name"+pathInfo.name);
+        MfsFileSystem.LOG.error("NeuFileOutputStream.close()调用:"+"pathInfo.name"+pathInfo.name);
         // 写入kafka
         String[] topicPartition = getTopicPatition(pathInfo.name);
 
@@ -101,7 +101,7 @@ public class NeuFileOutputStream extends OutputStream {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        SeaweedFileSystem.LOG.error("NeuFileOutputStream.close()调用完毕");
+        MfsFileSystem.LOG.error("NeuFileOutputStream.close()调用完毕");
 
     }
 

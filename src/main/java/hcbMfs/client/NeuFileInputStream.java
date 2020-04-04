@@ -28,7 +28,7 @@ public class NeuFileInputStream extends FSInputStream {
     KafkaConsumer<String,byte[]> consumer;
 
     public NeuFileInputStream(CuratorFramework zkclient, String path,KafkaConsumer<String,byte[]> consum) {
-        SeaweedFileSystem.LOG.error("NeuFileInputStream.构造函数调用");
+        MfsFileSystem.LOG.error("NeuFileInputStream.构造函数调用");
         this.client = zkclient;
         this.consumer = consum;
 
@@ -75,7 +75,7 @@ public class NeuFileInputStream extends FSInputStream {
         ConsumerRecord<String, byte[]> record = iterator.next();
         byteBuffer = record.value();
 
-        SeaweedFileSystem.LOG.error("NeuFileInputStream.构造函数调用结束"+ " "+byteBuffer.length);
+        MfsFileSystem.LOG.error("NeuFileInputStream.构造函数调用结束"+ " "+byteBuffer.length);
     }
 
     @Override

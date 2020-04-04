@@ -1,5 +1,5 @@
 import org.junit.Test;
-import hcbMfs.client.SeaweedFileSystem;
+import hcbMfs.client.MfsFileSystem;
 
 public class AppTest {
 
@@ -59,9 +59,9 @@ public class AppTest {
         System.out.println();
     }
     private String stripPath(String path) {
-//    SeaweedFileSystem.LOG.debug("Sleeping for configured interval");
+//    MfsFileSystem.LOG.debug("Sleeping for configured interval");
 //    SleepUtils.sleepMs(mUfsConf.getMs(NeuUnderFileSystemPropertyKey.NEU_UFS_SLEEP));
-        String divSign = SeaweedFileSystem.FS_SEAWEED_DEFAULT_PORT+"";
+        String divSign = MfsFileSystem.FS_SEAWEED_DEFAULT_PORT+"";
         int begin = path.indexOf(divSign)+divSign.length();
         int end = path.lastIndexOf("/");
         String dirPath = path.substring(begin,end+1);
@@ -77,7 +77,7 @@ public class AppTest {
         return dirPath+fileName;
     }
     private String stripDirPath(String path) {
-        String divSign = SeaweedFileSystem.FS_SEAWEED_DEFAULT_PORT+"";
+        String divSign = MfsFileSystem.FS_SEAWEED_DEFAULT_PORT+"";
         int begin = path.indexOf(divSign)+divSign.length();
 
         return path.substring(begin,path.length());

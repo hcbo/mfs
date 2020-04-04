@@ -21,13 +21,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public class SeaweedFileSystem extends org.apache.hadoop.fs.FileSystem {
+public class MfsFileSystem extends org.apache.hadoop.fs.FileSystem {
 
     public static final int FS_SEAWEED_DEFAULT_PORT = 8888;
     public static final String FS_SEAWEED_FILER_HOST = "fs.seaweed.filer.host";
     public static final String FS_SEAWEED_FILER_PORT = "fs.seaweed.filer.port";
 
-    public static final Logger LOG = LoggerFactory.getLogger(SeaweedFileSystem.class);
+    public static final Logger LOG = LoggerFactory.getLogger(MfsFileSystem.class);
     private static int BUFFER_SIZE = 16 * 1024 * 1024;
 
     private URI uri;

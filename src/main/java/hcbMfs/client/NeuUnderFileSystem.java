@@ -48,7 +48,7 @@ public class NeuUnderFileSystem  {
   public NeuUnderFileSystem(URI uri, Configuration conf) {
 
 
-      SeaweedFileSystem.LOG.error("NeuUnderFileSystem 构造方法开始");
+      MfsFileSystem.LOG.error("NeuUnderFileSystem 构造方法开始");
       String uriStr =  uri.toString();
       RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000,3);
       client = CuratorFrameworkFactory.builder()
@@ -98,17 +98,17 @@ public class NeuUnderFileSystem  {
       adminClient = AdminClient.create(properties);
 
       try{
-          SeaweedFileSystem.LOG.error(" system 线程上下文加载器 "+ Thread.currentThread().getContextClassLoader());
+          MfsFileSystem.LOG.error(" system 线程上下文加载器 "+ Thread.currentThread().getContextClassLoader());
           producer = new KafkaProducer<String, byte[]>(properties);
       }catch (Exception e){
 
-          SeaweedFileSystem.LOG.error(e.getMessage());
+          MfsFileSystem.LOG.error(e.getMessage());
       }
 
 
       initTopicPartitions(adminClient,rootPath);
 
-      SeaweedFileSystem.LOG.error("NeuUnderFileSystem 构造方法执行完毕");
+      MfsFileSystem.LOG.error("NeuUnderFileSystem 构造方法执行完毕");
   }
 
     private void initTopicPartitions(AdminClient adminClient, String rootPath) {
@@ -167,7 +167,7 @@ public class NeuUnderFileSystem  {
 
 
     public String getUnderFSType() {
-      SeaweedFileSystem.LOG.error("getUnderFSType() 执行");
+      MfsFileSystem.LOG.error("getUnderFSType() 执行");
       return "neu";
   }
 
@@ -178,19 +178,19 @@ public class NeuUnderFileSystem  {
 
 
   public OutputStream create(String path) throws IOException {
-      SeaweedFileSystem.LOG.error("create()方法执行 path="+path);
+      MfsFileSystem.LOG.error("create()方法执行 path="+path);
       KafkaProducer<String, byte[]> produc = null;
       try{
-          SeaweedFileSystem.LOG.error("System.getSecurityManager():"+System.getSecurityManager());
-          SeaweedFileSystem.LOG.error("加载器: "+Thread.currentThread().getContextClassLoader());
-          SeaweedFileSystem.LOG.error("该System类加载器: "+this.getClass().getClassLoader());
+          MfsFileSystem.LOG.error("System.getSecurityManager():"+System.getSecurityManager());
+          MfsFileSystem.LOG.error("加载器: "+Thread.currentThread().getContextClassLoader());
+          MfsFileSystem.LOG.error("该System类加载器: "+this.getClass().getClassLoader());
 //          Thread.currentThread().setContextClassLoader(null);
           produc = new KafkaProducer<String, byte[]>(properties);
       }catch (Exception e){
-          SeaweedFileSystem.LOG.error("异常"+e.getMessage()+ "\n--------");
+          MfsFileSystem.LOG.error("异常"+e.getMessage()+ "\n--------");
           StringWriter sw = new StringWriter();
           e.printStackTrace(new PrintWriter(sw));
-          SeaweedFileSystem.LOG.error("异常栈: "+sw.toString());
+          MfsFileSystem.LOG.error("异常栈: "+sw.toString());
       }
 
     return new NeuFileOutputStream(client,stripPath(path),produc);
@@ -198,13 +198,13 @@ public class NeuUnderFileSystem  {
 
 
   public boolean deleteDirectory(String path) throws IOException {
-      SeaweedFileSystem.LOG.error("deleteDirectory()方法执行 path="+path);
+      MfsFileSystem.LOG.error("deleteDirectory()方法执行 path="+path);
     return true;
   }
 
 
   public boolean deleteFile(String path) throws IOException {
-      SeaweedFileSystem.LOG.error("deleteFile()方法执行 path="+path);
+      MfsFileSystem.LOG.error("deleteFile()方法执行 path="+path);
 //      String underPath = stripPath(path);
 //      if(isFile(underPath)){
 //          try {
@@ -222,22 +222,22 @@ public class NeuUnderFileSystem  {
 
 
   public boolean exists(String path) throws IOException {
-      SeaweedFileSystem.LOG.error("exists()方法执行 path="+path);
+      MfsFileSystem.LOG.error("exists()方法执行 path="+path);
       String underPath = path;
-      if(path.contains(SeaweedFileSystem.FS_SEAWEED_DEFAULT_PORT+"")){
+      if(path.contains(MfsFileSystem.FS_SEAWEED_DEFAULT_PORT+"")){
           underPath = stripPath(path);
       }
         try {
             return null != client.checkExists().forPath(underPath);
         } catch (Exception e) {
-            SeaweedFileSystem.LOG.error(e.getMessage());
+            MfsFileSystem.LOG.error(e.getMessage());
             e.printStackTrace();
         }
         return false;
   }
 
   public long getBlockSizeByte(String path) throws IOException {
-      SeaweedFileSystem.LOG.error("getBlockSizeByte()方法执行 path="+path);
+      MfsFileSystem.LOG.error("getBlockSizeByte()方法执行 path="+path);
     String underPath = stripPath(path);
     if(exists(underPath)){
         byte[] output = new byte[0];
@@ -256,7 +256,7 @@ public class NeuUnderFileSystem  {
   }
 
   public FileStatus getDirectoryStatus(String path) throws IOException {
-      SeaweedFileSystem.LOG.error("getDirectoryStatus()方法执行 path="+path);
+      MfsFileSystem.LOG.error("getDirectoryStatus()方法执行 path="+path);
       String underPath = stripPath(path);
       if(exists(underPath)){
           byte[] output = new byte[0];
@@ -274,7 +274,7 @@ public class NeuUnderFileSystem  {
 
 
 //  public List<String> getFileLocations(String path) throws IOException {
-//      SeaweedFileSystem.LOG.error("getFileLocations()方法执行 path="+path);
+//      MfsFileSystem.LOG.error("getFileLocations()方法执行 path="+path);
 //    List<String> ret = new ArrayList<>();
 //    ret.add(NetworkAddressUtils.getConnectHost(NetworkAddressUtils.ServiceType.WORKER_RPC, mUfsConf));
 //    return ret;
@@ -288,7 +288,7 @@ public class NeuUnderFileSystem  {
 
 
 //  public UfsFileStatus getFileStatus(String path) throws IOException {
-//      SeaweedFileSystem.LOG.error("getFileStatus()方法执行 path="+path);
+//      MfsFileSystem.LOG.error("getFileStatus()方法执行 path="+path);
 //    String underPath = stripPath(path);
 //    if(isFile(underPath)){
 //        byte[] output = new byte[0];
@@ -308,7 +308,7 @@ public class NeuUnderFileSystem  {
 
 //  @Override
 //  public long getSpace(String path, SpaceType type) throws IOException {
-//      SeaweedFileSystem.LOG.error("getSpace()方法执行 path="+path);
+//      MfsFileSystem.LOG.error("getSpace()方法执行 path="+path);
 //    if(type.getValue()==0){
 //      return 249849593856L;
 //    }else if (type.getValue()==2){
@@ -320,7 +320,7 @@ public class NeuUnderFileSystem  {
 
 //  @Override
 //  public UfsStatus getStatus(String path) throws IOException {
-//      SeaweedFileSystem.LOG.error("getStatus()方法执行 path="+path);
+//      MfsFileSystem.LOG.error("getStatus()方法执行 path="+path);
 //      String underPath = stripPath(path);
 //      if(exists(underPath)){
 //          byte[] output = new byte[0];
@@ -348,7 +348,7 @@ public class NeuUnderFileSystem  {
 
 
   public boolean isDirectory(String path) throws IOException {
-      SeaweedFileSystem.LOG.error("isDirectory()方法执行 path="+path);
+      MfsFileSystem.LOG.error("isDirectory()方法执行 path="+path);
     String underPath = stripPath(path);
     if(exists(path)){
       return !isFile(path);
@@ -359,7 +359,7 @@ public class NeuUnderFileSystem  {
 
 
   public boolean isFile(String path) throws IOException {
-      SeaweedFileSystem.LOG.error("isFile()方法执行 path="+path);
+      MfsFileSystem.LOG.error("isFile()方法执行 path="+path);
     String underPath = stripPath(path);
     if(underPath.contains(".alluxio_ufs_blocks")){
       return false;
@@ -370,7 +370,7 @@ public class NeuUnderFileSystem  {
         output = client.getData().forPath(underPath);
       } catch (Exception e) {
         e.printStackTrace();
-        SeaweedFileSystem.LOG.error(e.getMessage());
+        MfsFileSystem.LOG.error(e.getMessage());
       }
       PathInfo pathInfo = (PathInfo) SerializationUtils.deserialize(output);
       return !pathInfo.isDirectory;
@@ -381,7 +381,7 @@ public class NeuUnderFileSystem  {
 
 
   public FileStatus[] listStatus(String path) throws IOException {
-      SeaweedFileSystem.LOG.error("listStatus()方法执行 path="+path);
+      MfsFileSystem.LOG.error("listStatus()方法执行 path="+path);
     String underPath = stripDirPath(path);
     // 根据zk 获取子节点 getchildlen
     List<String> children = null;
@@ -431,7 +431,7 @@ public class NeuUnderFileSystem  {
    */
 
   public boolean mkdirs(String path ) throws IOException {
-      SeaweedFileSystem.LOG.error("mkdirs()方法执行 path="+path);
+      MfsFileSystem.LOG.error("mkdirs()方法执行 path="+path);
       //    // 传入的一定是目录的路径
     String underPath = stripDirPath(path);
     if(exists(underPath)){
@@ -458,7 +458,7 @@ public class NeuUnderFileSystem  {
   }
 
     private String stripDirPath(String path) {
-        String divSign = SeaweedFileSystem.FS_SEAWEED_DEFAULT_PORT+"";
+        String divSign = MfsFileSystem.FS_SEAWEED_DEFAULT_PORT+"";
         int begin = path.indexOf(divSign)+divSign.length();
 
         return path.substring(begin,path.length());
@@ -653,16 +653,16 @@ public class NeuUnderFileSystem  {
       }
 
 
-      SeaweedFileSystem.LOG.error("open()方法执行 path="+path);
+      MfsFileSystem.LOG.error("open()方法执行 path="+path);
       KafkaConsumer<String, byte[]> consum = null;
       try{
-          SeaweedFileSystem.LOG.error("加载器: "+Thread.currentThread().getContextClassLoader());
+          MfsFileSystem.LOG.error("加载器: "+Thread.currentThread().getContextClassLoader());
 //          Thread.currentThread().setContextClassLoader(null);
           consum = new KafkaConsumer<String, byte[]>(properties);
           return new NeuFileInputStream(client,stripDirPath(path),consum);
       }catch (Exception e){
 
-//          SeaweedFileSystem.LOG.error("异常"+e.toString());
+//          MfsFileSystem.LOG.error("异常"+e.toString());
           return null;
       }
 
@@ -671,14 +671,14 @@ public class NeuUnderFileSystem  {
 
 
   public boolean renameDirectory(String src, String dst) throws IOException {
-      SeaweedFileSystem.LOG.error("renameDirectory()方法执行 src="+src+" dst"+dst);
+      MfsFileSystem.LOG.error("renameDirectory()方法执行 src="+src+" dst"+dst);
     return true;
   }
 
 
   public boolean renameFile(String src, String dst) throws IOException {
       dst = stripPath(src);
-      SeaweedFileSystem.LOG.error("renameFile()方法执行 src="+src+" dst"+dst);
+      MfsFileSystem.LOG.error("renameFile()方法执行 src="+src+" dst"+dst);
       byte[] output = new byte[0];
       try {
           output = client.getData().forPath(dst);
@@ -731,9 +731,9 @@ public class NeuUnderFileSystem  {
    * @return the path, with the optional scheme stripped away
    */
   private String stripPath(String path) {
-//    SeaweedFileSystem.LOG.debug("Sleeping for configured interval");
+//    MfsFileSystem.LOG.debug("Sleeping for configured interval");
 //    SleepUtils.sleepMs(mUfsConf.getMs(NeuUnderFileSystemPropertyKey.NEU_UFS_SLEEP));
-    String divSign = SeaweedFileSystem.FS_SEAWEED_DEFAULT_PORT+"";
+    String divSign = MfsFileSystem.FS_SEAWEED_DEFAULT_PORT+"";
     int begin = path.indexOf(divSign)+divSign.length();
     int end = path.lastIndexOf("/");
     String dirPath = path.substring(begin,end+1);
@@ -770,7 +770,7 @@ public class NeuUnderFileSystem  {
                 }
             }
         } catch (Exception e) {
-            SeaweedFileSystem.LOG.error("Neu getFileStatus "+"path:"+path+" "+e.toString());
+            MfsFileSystem.LOG.error("Neu getFileStatus "+"path:"+path+" "+e.toString());
         }
         return null;
     }
