@@ -1,4 +1,3 @@
-import org.I0Itec.zkclient.ZkClient;
 import org.apache.commons.lang3.SerializationUtils;
 import org.junit.Test;
 import seaweed.hdfs.NeuUnderFileSystem;
@@ -12,15 +11,15 @@ public class AppTest {
     public void app(){
         System.out.println("hello test");
     }
-    @Test
-    public void app2(){
-        ZkClient zkClient = new ZkClient("kafka:2181", 5000);
-        zkClient.createPersistent("/fileSize1/zkclientTest1/hcb",true);
-        zkClient.writeData("/fileSize1/zkclientTest1/hcb",new StringBuffer("hcb2030"));
-        StringBuffer sb = (StringBuffer)zkClient.readData("/fileSize1/zkclientTest1/hcb");
-        System.out.println(sb);
-
-    }
+//    @Test
+//    public void app2(){
+//        ZkClient zkClient = new ZkClient("kafka:2181", 5000);
+//        zkClient.createPersistent("/fileSize1/zkclientTest1/hcb",true);
+//        zkClient.writeData("/fileSize1/zkclientTest1/hcb",new StringBuffer("hcb2030"));
+//        StringBuffer sb = (StringBuffer)zkClient.readData("/fileSize1/zkclientTest1/hcb");
+//        System.out.println(sb);
+//
+//    }
 
     @Test
     public void app3(){
