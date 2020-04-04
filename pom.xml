@@ -10,7 +10,7 @@
     </properties>
 
     <groupId>hcbMfs.client</groupId>
-    <artifactId>seaweedfs-hadoop2-client</artifactId>
+    <artifactId>hcbMfs</artifactId>
     <version>${mfs.client.version}</version>
 
     <!--<parent>-->
