@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <mfs.client.version>1.2.4</mfs.client.version>
+        <mfs.client.version>1.0.0</mfs.client.version>
         <hadoop.version>2.7.4</hadoop.version>
     </properties>
 
-    <groupId>com.github.chrislusf</groupId>
+    <groupId>hcbMfs.client</groupId>
     <artifactId>seaweedfs-hadoop2-client</artifactId>
     <version>${mfs.client.version}</version>
 
@@ -90,31 +90,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-gpg-plugin</artifactId>-->
-                <!--<version>1.5</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>sign-artifacts</id>-->
-                        <!--<phase>verify</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>sign</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
-            <!--<plugin>-->
-                <!--<groupId>org.sonatype.plugins</groupId>-->
-                <!--<artifactId>nexus-staging-maven-plugin</artifactId>-->
-                <!--<version>1.6.7</version>-->
-                <!--<extensions>true</extensions>-->
-                <!--<configuration>-->
-                    <!--<serverId>ossrh</serverId>-->
-                    <!--<nexusUrl>https://oss.sonatype.org/</nexusUrl>-->
-                    <!--<autoReleaseAfterClose>true</autoReleaseAfterClose>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -178,11 +154,7 @@
 
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>com.github.chrislusf</groupId>-->
-            <!--<artifactId>seaweedfs-client</artifactId>-->
-            <!--<version>1.2.4</version>-->
-        <!--</dependency>-->
+
         <!--<dependency>-->
             <!--<groupId>org.apache.hadoop</groupId>-->
             <!--<artifactId>hadoop-common</artifactId>-->
@@ -209,11 +181,7 @@
             <artifactId>zookeeper</artifactId>
             <version>3.4.9</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>com.101tec</groupId>-->
-            <!--<artifactId>zkclient</artifactId>-->
-            <!--<version>0.10</version>-->
-        <!--</dependency>-->
+
 
 
     </dependencies>

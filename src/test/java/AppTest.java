@@ -1,8 +1,5 @@
-import org.apache.commons.lang3.SerializationUtils;
 import org.junit.Test;
-import seaweed.hdfs.NeuUnderFileSystem;
-import seaweed.hdfs.PathInfo;
-import seaweed.hdfs.SeaweedFileSystem;
+import hcbMfs.client.SeaweedFileSystem;
 
 public class AppTest {
 
