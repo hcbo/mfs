@@ -123,4 +123,13 @@ public class AppTest {
         String[] strings = getTopicPatitionInputStream("/china/offsets/0");
         System.out.println();
     }
+
+    @Test
+    public void app7(){
+        String str = "mfs://localhost:8888/china/state/0/17/11.delta";
+        //mfs://localhost:8888/china/state/0/17/11.delta
+        String divSign = MfsFileSystem.FS_SEAWEED_DEFAULT_PORT+"";
+        int begin = str.indexOf(divSign)+divSign.length();
+        System.out.println(str.substring(begin));
+    }
 }

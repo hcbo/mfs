@@ -199,12 +199,26 @@ public class MfsFileSystem extends org.apache.hadoop.fs.FileSystem {
     public boolean delete(Path path, boolean recursive) {
 
         LOG.error("delete path: {} recursive:{}", path, recursive);
+        //三种格式
+        //.tmp
+        //delete path: mfs://localhost:8888/china/offsets/112 recursive:true
+        //delete path: /china/state/0/76/1.delta recursive:true
+        if(path.toString().endsWith(".tmp")){
+            return true;
+        }
+        String deletePath = path.toString();
+        if(path.toString().startsWith("mfs")){
+            String divSign = MfsFileSystem.FS_SEAWEED_DEFAULT_PORT+"";
+            int begin = deletePath.indexOf(divSign)+divSign.length();
+            deletePath = deletePath.substring(begin);
+        }
 
-//        try {
-//            return neuUnderFileSystem.deleteFile(path.toString());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+
+        try {
+            return neuUnderFileSystem.deleteFile(deletePath);
+        } catch (IOException e) {
+            LOG.error(e.toString());
+        }
         return true;
 
     }
@@ -641,7 +655,7 @@ public class MfsFileSystem extends org.apache.hadoop.fs.FileSystem {
     private Properties getLog4jProps(){
         Properties props = new Properties();
         props.put("log4j.appender.FileAppender","org.apache.log4j.RollingFileAppender");
-        props.put("log4j.appender.FileAppender.File","/Users/hcb/Documents/logs2/log4j/neu2022.log");
+        props.put("log4j.appender.FileAppender.File","/Users/hcb/Documents/logs2/log4j/neu2024.log");
         props.put("log4j.appender.FileAppender.layout","org.apache.log4j.PatternLayout");
         props.put("log4j.appender.FileAppender.layout.ConversionPattern","%-4r [%t] %-5p %c %x - %m%n");
         props.put("log4j.rootLogger","ERROR, FileAppender");

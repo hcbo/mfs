@@ -205,18 +205,16 @@ public class NeuUnderFileSystem  {
 
   public boolean deleteFile(String path) throws IOException {
       MfsFileSystem.LOG.error("deleteFile()方法执行 path="+path);
-//      String underPath = stripPath(path);
-//      if(isFile(underPath)){
-//          try {
-//              client.delete()
-//                      .guaranteed()      //删除失败，则客户端持续删除，直到节点删除为止
-//                      .deletingChildrenIfNeeded()   //删除相关子节点
-//                      .withVersion(-1)    //无视版本，直接删除
-//                      .forPath(underPath);
-//          } catch (Exception e) {
-//              e.printStackTrace();
-//          }
-//      }
+          try {
+              client.delete()
+                      .guaranteed()      //删除失败，则客户端持续删除，直到节点删除为止
+                      .deletingChildrenIfNeeded()   //删除相关子节点
+                      .withVersion(-1)    //无视版本，直接删除
+                      .forPath(path);
+          } catch (Exception e) {
+              MfsFileSystem.LOG.error(e.toString());
+          }
+
       return true;
   }
 
