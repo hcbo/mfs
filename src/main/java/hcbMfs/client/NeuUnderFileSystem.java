@@ -133,11 +133,22 @@ public class NeuUnderFileSystem  {
         NewTopic newTopic5 = new NewTopic(rootPath+"_state_0", 200, (short)1);
         newTopics.add(newTopic5);
 
-        // 假设3个state的应用
-        NewTopic newTopic6 = new NewTopic(rootPath+"_state_1", 200, (short)1);
-        newTopics.add(newTopic6);
-        NewTopic newTopic7 = new NewTopic(rootPath+"_state_2", 200, (short)1);
-        newTopics.add(newTopic7);
+        // 动态加载操作符个数
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        InputStream inStream = cl.getResourceAsStream("hcbConfig.properties");
+        Properties myProp = new Properties();
+        try {
+            myProp.load(inStream);
+        } catch (IOException e) {
+            MfsFileSystem.LOG.error("hcbConfig");
+        }
+        int num = Integer.parseInt(myProp.getProperty("ops"));
+        MfsFileSystem.LOG.error("num : "+num);
+        for (int i = 1; i <= num; i++) {
+            NewTopic myTopic = new NewTopic(rootPath+"_state_"+i, 200, (short)1);
+            newTopics.add(myTopic);
+        }
+
 
         try {
             if(null == client.checkExists().forPath("/brokers/topics/"+rootPath)){
