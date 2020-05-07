@@ -19,7 +19,7 @@ sparkPartitions=200
 logPath=/Users/hcb/Documents/logs2/log4j/neu2025.log
 ```
 
-## Packag
+## Package
 
 执行`ex.sh`,将生成的`target/hcbMfs-1.0.0.jar`放在spark任务的依赖中.
 
