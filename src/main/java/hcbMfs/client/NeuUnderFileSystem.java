@@ -50,9 +50,11 @@ public class NeuUnderFileSystem  {
 
       MfsFileSystem.LOG.error("NeuUnderFileSystem 构造方法开始");
       String uriStr =  uri.toString();
+      MfsFileSystem.LOG.error("uri.toString : "+uriStr);
       RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000,3);
+      String zkServers = PropertyUtils.getZkServers();
       client = CuratorFrameworkFactory.builder()
-            .connectString("kafka:2181")
+            .connectString(zkServers)
             .retryPolicy(retryPolicy)
             .sessionTimeoutMs(6000)
             .connectionTimeoutMs(3000)
@@ -81,7 +83,9 @@ public class NeuUnderFileSystem  {
 
 
       //kafka的property
-      properties.put("bootstrap.servers","192.168.225.6:9092");
+      String kafkaServers = PropertyUtils.getKafkaServers();
+      MfsFileSystem.LOG.error("kafkaServers "+kafkaServers);
+      properties.put("bootstrap.servers",kafkaServers);
       properties.put("key.serializer","org.apache.kafka.common.serialization.StringSerializer");
       properties.put("value.serializer","org.apache.kafka.common.serialization.ByteArraySerializer");
       properties.put("key.deserializer","org.apache.kafka.common.serialization.StringDeserializer");
@@ -114,7 +118,7 @@ public class NeuUnderFileSystem  {
     private void initTopicPartitions(AdminClient adminClient, String rootPath) {
         List<NewTopic> newTopics = new ArrayList<NewTopic>();
         //将包含metadata的topic消息设置为70days
-        NewTopic newTopic1 = new NewTopic(rootPath, 1, (short)1);
+        NewTopic newTopic1 = new NewTopic(rootPath, 1, (short)2);
         Map<String, String> configs = new HashMap<>();
         configs.put("retention.ms","6048000000");
         newTopic1 = newTopic1.configs(configs);
@@ -126,23 +130,16 @@ public class NeuUnderFileSystem  {
 
         NewTopic newTopic3 = new NewTopic(rootPath+"_offsets", 1, (short)1);
         newTopics.add(newTopic3);
-
-        NewTopic newTopic4 = new NewTopic(rootPath+"_sources", 10, (short)1);
+        int sources = PropertyUtils.getSources();
+        NewTopic newTopic4 = new NewTopic(rootPath+"_sources", sources, (short)1);
         newTopics.add(newTopic4);
-
-        NewTopic newTopic5 = new NewTopic(rootPath+"_state_0", 200, (short)1);
+        String sparkPars = PropertyUtils.getSparkPartitions();
+        int sparkPartitions = sparkPars == null?200:Integer.parseInt(sparkPars);
+        NewTopic newTopic5 = new NewTopic(rootPath+"_state_0", sparkPartitions, (short)1);
         newTopics.add(newTopic5);
 
-        // 动态加载操作符个数
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        InputStream inStream = cl.getResourceAsStream("hcbConfig.properties");
-        Properties myProp = new Properties();
-        try {
-            myProp.load(inStream);
-        } catch (IOException e) {
-            MfsFileSystem.LOG.error("hcbConfig");
-        }
-        int num = Integer.parseInt(myProp.getProperty("ops"));
+
+        int num = PropertyUtils.getOps();
         MfsFileSystem.LOG.error("num : "+num);
         for (int i = 1; i <= num; i++) {
             NewTopic myTopic = new NewTopic(rootPath+"_state_"+i, 200, (short)1);

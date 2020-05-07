@@ -654,8 +654,9 @@ public class MfsFileSystem extends org.apache.hadoop.fs.FileSystem {
 
     private Properties getLog4jProps(){
         Properties props = new Properties();
+        String logPath = PropertyUtils.getLogPath();
         props.put("log4j.appender.FileAppender","org.apache.log4j.RollingFileAppender");
-        props.put("log4j.appender.FileAppender.File","/Users/hcb/Documents/logs2/log4j/neu2024.log");
+        props.put("log4j.appender.FileAppender.File",logPath);
         props.put("log4j.appender.FileAppender.layout","org.apache.log4j.PatternLayout");
         props.put("log4j.appender.FileAppender.layout.ConversionPattern","%-4r [%t] %-5p %c %x - %m%n");
         props.put("log4j.rootLogger","ERROR, FileAppender");

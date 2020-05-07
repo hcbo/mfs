@@ -33,7 +33,7 @@ public class NeuFileInputStream extends FSInputStream {
         this.consumer = consum;
 
         if(client == null){
-            String zkServers = "192.168.225.6:2181";
+            String zkServers = PropertyUtils.getZkServers();
             RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000,3);
             this.client = CuratorFrameworkFactory.builder()
                     .connectString(zkServers)
