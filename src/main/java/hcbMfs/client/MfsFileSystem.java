@@ -95,7 +95,6 @@ public class MfsFileSystem extends org.apache.hadoop.fs.FileSystem {
 //        path = qualify(path);
 
 
-
         try {
 
             InputStream inputStream = neuUnderFileSystem.open(path.toString());

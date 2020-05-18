@@ -668,7 +668,7 @@ public class NeuUnderFileSystem  {
           return new NeuFileInputStream(client,stripDirPath(path),consum);
       }catch (Exception e){
 
-//          MfsFileSystem.LOG.error("异常"+e.toString());
+          MfsFileSystem.LOG.error("异常"+e.toString());
           return null;
       }
 

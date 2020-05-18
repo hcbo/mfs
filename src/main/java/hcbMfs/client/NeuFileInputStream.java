@@ -74,7 +74,8 @@ public class NeuFileInputStream extends FSInputStream {
         Iterator<ConsumerRecord<String, byte[]>> iterator =records.iterator();
         ConsumerRecord<String, byte[]> record = iterator.next();
         byteBuffer = record.value();
-
+        // solved org.apache.kafka.common.KafkaException: Failed to construct kafka consumer
+        consum.close();
         MfsFileSystem.LOG.error("NeuFileInputStream.构造函数调用结束"+ " "+byteBuffer.length);
     }
 
