@@ -62,25 +62,25 @@ public class NeuUnderFileSystem  {
             .build();
       client.start();
       this.rootPath = getRootPath(uri);
-      try {
-          if(null == client.checkExists().forPath("/"+rootPath)){
-              //写入rootPath 元信息到zookeeper
-              PathInfo pathInfo = new PathInfo(true,rootPath,System.currentTimeMillis());
+      if(!rootPath.contains("/")){
+          try {
+              if(null == client.checkExists().forPath("/"+rootPath)){
+                  //写入rootPath 元信息到zookeeper
+                  PathInfo pathInfo = new PathInfo(true,rootPath,System.currentTimeMillis());
 
-              byte[] input = SerializationUtils.serialize(pathInfo);
-              try {
-                  client.create()
-                          .creatingParentContainersIfNeeded()
-                          .forPath("/"+rootPath, input);
-              } catch (Exception e) {
-                  e.printStackTrace();
+                  byte[] input = SerializationUtils.serialize(pathInfo);
+                  try {
+                      client.create()
+                              .creatingParentContainersIfNeeded()
+                              .forPath("/"+rootPath, input);
+                  } catch (Exception e) {
+                      e.printStackTrace();
+                  }
               }
+          } catch (Exception e) {
+              e.printStackTrace();
           }
-      } catch (Exception e) {
-          e.printStackTrace();
       }
-
-
 
       //kafka的property
       String kafkaServers = PropertyUtils.getKafkaServers();
@@ -98,19 +98,16 @@ public class NeuUnderFileSystem  {
       properties.put("retries", 3);
       properties.put("buffer.memory", 33554432);
 
-
       adminClient = AdminClient.create(properties);
-
       try{
           MfsFileSystem.LOG.error(" system 线程上下文加载器 "+ Thread.currentThread().getContextClassLoader());
           producer = new KafkaProducer<String, byte[]>(properties);
       }catch (Exception e){
-
           MfsFileSystem.LOG.error(e.getMessage());
       }
-
-
-      initTopicPartitions(adminClient,rootPath);
+      if(!rootPath.contains("/")){
+          initTopicPartitions(adminClient,rootPath);
+      }
 
       MfsFileSystem.LOG.error("NeuUnderFileSystem 构造方法执行完毕");
   }
@@ -169,8 +166,10 @@ public class NeuUnderFileSystem  {
 
     private String getRootPath(URI uri) {
       //mfs://localhost:8888/china
+//        分布式下每台worker都会 创建该对象,所以这种路径 mfs://219.216.65.161:8888/china3/state/0/43也会创建topic
         String fullPath = uri.toString();
-        return fullPath.substring(fullPath.lastIndexOf('/')+1,fullPath.length());
+        String port = PropertyUtils.getPort();
+        return fullPath.substring(fullPath.indexOf(port)+port.length()+1,fullPath.length());
     }
 
 

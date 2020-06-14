@@ -80,6 +80,21 @@ public class PropertyUtils {
         return myProp.getProperty("logPath");
     }
 
+    public static String getPort(){
+        // 动态加载操作符个数
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        InputStream inStream = cl.getResourceAsStream("hcbConfig.properties");
+        Properties myProp = new Properties();
+        try {
+            myProp.load(inStream);
+        } catch (IOException e) {
+            MfsFileSystem.LOG.error("hcbConfig");
+        }
+        return myProp.getProperty("port");
+    }
+
+
+
 
 
 
