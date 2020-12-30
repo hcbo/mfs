@@ -17,18 +17,6 @@ public class PropertyUtils {
         }
         return Integer.parseInt(myProp.getProperty("ops"));
     }
-    public static int getSources(){
-        // 动态加载操作符个数
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        InputStream inStream = cl.getResourceAsStream("hcbConfig.properties");
-        Properties myProp = new Properties();
-        try {
-            myProp.load(inStream);
-        } catch (IOException e) {
-            MfsFileSystem.LOG.error("hcbConfig");
-        }
-        return Integer.parseInt(myProp.getProperty("sources"));
-    }
     public static String getZkServers(){
         // 动态加载操作符个数
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
@@ -54,7 +42,7 @@ public class PropertyUtils {
         return myProp.getProperty("kafkaServers");
     }
 
-    public static String getSparkPartitions(){
+    public static String getSourcesAndStatePartitionNum(){
         // 动态加载操作符个数
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         InputStream inStream = cl.getResourceAsStream("hcbConfig.properties");
@@ -64,7 +52,7 @@ public class PropertyUtils {
         } catch (IOException e) {
             MfsFileSystem.LOG.error("hcbConfig");
         }
-        return myProp.getProperty("sparkPartitions");
+        return myProp.getProperty("sourcesAndStatePartitionNum");
     }
 
     public static String getLogPath(){

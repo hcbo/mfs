@@ -140,19 +140,19 @@ public class NeuUnderFileSystem  {
 
         NewTopic newTopic3 = new NewTopic(rootPath+"_offsets", 1, (short)1);
         newTopics.add(newTopic3);
-        int sources = PropertyUtils.getSources();
-        NewTopic newTopic4 = new NewTopic(rootPath+"_sources", sources, (short)1);
+        String sparkPars = PropertyUtils.getSourcesAndStatePartitionNum();
+        int sparkPartitions = sparkPars == null ? 3 : Integer.parseInt(sparkPars);
+        NewTopic newTopic4 = new NewTopic(rootPath+"_sources", sparkPartitions, (short)1);
         newTopics.add(newTopic4);
-        String sparkPars = PropertyUtils.getSparkPartitions();
-        int sparkPartitions = sparkPars == null?200:Integer.parseInt(sparkPars);
+
         NewTopic newTopic5 = new NewTopic(rootPath+"_state_0", sparkPartitions, (short)1);
         newTopics.add(newTopic5);
 
 
         int num = PropertyUtils.getOps();
         MfsFileSystem.LOG.error("num : "+num);
-        for (int i = 1; i <= num; i++) {
-            NewTopic myTopic = new NewTopic(rootPath+"_state_"+i, 200, (short)1);
+        for (int i = 1; i <= (num-1); i++) {
+            NewTopic myTopic = new NewTopic(rootPath+"_state_"+i, sparkPartitions, (short)1);
             newTopics.add(myTopic);
         }
 

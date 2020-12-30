@@ -72,9 +72,10 @@ public class NeuFileOutputStream extends OutputStream {
         String[] topicPartition = getTopicPatition(pathInfo.name);
 
         MfsFileSystem.LOG.error("file data to kafka time start path " + pathInfo.name + " " + System.currentTimeMillis());
-
+        int parCount = Integer.parseInt(PropertyUtils.getSourcesAndStatePartitionNum());
         ProducerRecord record =
-                new ProducerRecord(topicPartition[0],Integer.parseInt(topicPartition[1]),pathInfo.name, Arrays.copyOf(byteBuffer,pointer));
+                new ProducerRecord(topicPartition[0],Integer.parseInt(topicPartition[1]) % parCount,
+                        pathInfo.name, Arrays.copyOf(byteBuffer,pointer));
 
         MfsFileSystem.LOG.error("file data to kafka pointer " + pointer);
 

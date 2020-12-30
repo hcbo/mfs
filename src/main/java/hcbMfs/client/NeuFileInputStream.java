@@ -62,7 +62,8 @@ public class NeuFileInputStream extends FSInputStream {
         // get message from kafka
         MfsFileSystem.LOG.error("file data from kafka time start path " + path + " " + System.currentTimeMillis());
         String[] tp = getTopicPatition(pathInfo.name);
-        TopicPartition topicPartition = new TopicPartition(tp[0],Integer.parseInt(tp[1]));
+        int parCount = Integer.parseInt(PropertyUtils.getSourcesAndStatePartitionNum());
+        TopicPartition topicPartition = new TopicPartition(tp[0], Integer.parseInt(tp[1]) % parCount);
         List topicPartitionList = new ArrayList<TopicPartition>();
         topicPartitionList.add(topicPartition);
         consumer.assign(topicPartitionList);
