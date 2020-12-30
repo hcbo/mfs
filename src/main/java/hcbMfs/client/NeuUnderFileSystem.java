@@ -46,8 +46,6 @@ public class NeuUnderFileSystem  {
    * @param conf UFS configuration
    */
   public NeuUnderFileSystem(URI uri, Configuration conf) {
-
-
       MfsFileSystem.LOG.error("NeuUnderFileSystem 构造方法开始");
       String uriStr =  uri.toString();
       MfsFileSystem.LOG.error("uri.toString : "+uriStr);
@@ -64,6 +62,7 @@ public class NeuUnderFileSystem  {
       this.rootPath = getRootPath(uri);
       if(!rootPath.contains("/")){
           try {
+              MfsFileSystem.LOG.error("zk create time start path " + "/"+rootPath + System.currentTimeMillis());
               if(null == client.checkExists().forPath("/"+rootPath)){
                   //写入rootPath 元信息到zookeeper
                   PathInfo pathInfo = new PathInfo(true,rootPath,System.currentTimeMillis());
@@ -77,6 +76,7 @@ public class NeuUnderFileSystem  {
                       e.printStackTrace();
                   }
               }
+              MfsFileSystem.LOG.error("zk create time stop path " + "/"+rootPath + System.currentTimeMillis());
           } catch (Exception e) {
               e.printStackTrace();
           }
@@ -90,13 +90,25 @@ public class NeuUnderFileSystem  {
       properties.put("value.serializer","org.apache.kafka.common.serialization.ByteArraySerializer");
       properties.put("key.deserializer","org.apache.kafka.common.serialization.StringDeserializer");
       properties.put("value.deserializer","org.apache.kafka.common.serialization.ByteArrayDeserializer");
-      properties.put("enable.auto.commit",true);
-      // todo group id 变化起来?
-      properties.put("group.id","test10");
-      properties.put("auto.offset.reset","earliest");
+      //a batch size of zero will disable batching entirely
+      // https://kafka.apache.org/documentation/#producerconfigs_batch.size
+      properties.put("batch.size", 0);
       properties.put("acks", "-1");
       properties.put("retries", 3);
-      properties.put("buffer.memory", 33554432);
+      // https://kafka.apache.org/documentation/#producerconfigs_buffer.memory
+      // 默认32M,这里设为128兆
+      properties.put("buffer.memory", 134217728);
+
+      // 不需要记录消费进度，因为每次都是指定offset去消费，默认为true
+      properties.put("enable.auto.commit", false);
+      // The maximum number of records returned in a single call to poll(). default is 500
+      properties.put("max.poll.records", 1);
+      // https://kafka.apache.org/documentation/#consumerconfigs_group.id
+      properties.put("group.id", "checkpointGroup");
+      // https://kafka.apache.org/documentation/#consumerconfigs_auto.offset.reset
+      properties.put("auto.offset.reset","earliest");
+
+
 
       adminClient = AdminClient.create(properties);
       try{
@@ -108,11 +120,12 @@ public class NeuUnderFileSystem  {
       if(!rootPath.contains("/")){
           initTopicPartitions(adminClient,rootPath);
       }
-
       MfsFileSystem.LOG.error("NeuUnderFileSystem 构造方法执行完毕");
   }
 
     private void initTopicPartitions(AdminClient adminClient, String rootPath) {
+        MfsFileSystem.LOG.error("initTopicPartitions time start " + System.currentTimeMillis());
+
         List<NewTopic> newTopics = new ArrayList<NewTopic>();
         //将包含metadata的topic消息设置为70days
         NewTopic newTopic1 = new NewTopic(rootPath, 1, (short)2);
@@ -161,6 +174,8 @@ public class NeuUnderFileSystem  {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        MfsFileSystem.LOG.error("initTopicPartitions time stop "+ System.currentTimeMillis());
+
 
     }
 
@@ -173,41 +188,26 @@ public class NeuUnderFileSystem  {
     }
 
 
-    public String getUnderFSType() {
-      MfsFileSystem.LOG.error("getUnderFSType() 执行");
-      return "neu";
-  }
-
-
-  public void close() throws IOException {
-
-  }
-
 
   public OutputStream create(String path) throws IOException {
       MfsFileSystem.LOG.error("create()方法执行 path="+path);
-      KafkaProducer<String, byte[]> produc = null;
       try{
           MfsFileSystem.LOG.error("System.getSecurityManager():"+System.getSecurityManager());
           MfsFileSystem.LOG.error("加载器: "+Thread.currentThread().getContextClassLoader());
           MfsFileSystem.LOG.error("该System类加载器: "+this.getClass().getClassLoader());
 //          Thread.currentThread().setContextClassLoader(null);
-          produc = new KafkaProducer<String, byte[]>(properties);
-      }catch (Exception e){
+      } catch (Exception e){
           MfsFileSystem.LOG.error("异常"+e.getMessage()+ "\n--------");
           StringWriter sw = new StringWriter();
           e.printStackTrace(new PrintWriter(sw));
           MfsFileSystem.LOG.error("异常栈: "+sw.toString());
       }
 
-    return new NeuFileOutputStream(client,stripPath(path),produc);
+    return new NeuFileOutputStream(client,stripPath(path),producer);
   }
 
 
-  public boolean deleteDirectory(String path) throws IOException {
-      MfsFileSystem.LOG.error("deleteDirectory()方法执行 path="+path);
-    return true;
-  }
+
 
 
   public boolean deleteFile(String path) throws IOException {

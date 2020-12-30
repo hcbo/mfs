@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <mfs.client.version>1.0.0</mfs.client.version>
+        <mfs.client.version>1.0.1</mfs.client.version>
         <hadoop.version>2.7.4</hadoop.version>
     </properties>
 

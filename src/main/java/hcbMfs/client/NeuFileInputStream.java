@@ -46,7 +46,7 @@ public class NeuFileInputStream extends FSInputStream {
         }
 
 
-
+        MfsFileSystem.LOG.error("file metadata from zk time start path " + path + " " +  System.currentTimeMillis());
         // get offset from zookeeper
         byte[] output = new byte[0];
         try {
@@ -56,8 +56,11 @@ public class NeuFileInputStream extends FSInputStream {
         }
         PathInfo pathInfo = (PathInfo) SerializationUtils.deserialize(output);
         long offset = pathInfo.fileInfo.offset;
+        MfsFileSystem.LOG.error("file metadata from zk time stop path " + path + " " + System.currentTimeMillis());
+
 
         // get message from kafka
+        MfsFileSystem.LOG.error("file data from kafka time start path " + path + " " + System.currentTimeMillis());
         String[] tp = getTopicPatition(pathInfo.name);
         TopicPartition topicPartition = new TopicPartition(tp[0],Integer.parseInt(tp[1]));
         List topicPartitionList = new ArrayList<TopicPartition>();
@@ -76,6 +79,7 @@ public class NeuFileInputStream extends FSInputStream {
         byteBuffer = record.value();
         // solved org.apache.kafka.common.KafkaException: Failed to construct kafka consumer
         consum.close();
+        MfsFileSystem.LOG.error("file data from kafka time stop path " + path + " " + System.currentTimeMillis());
         MfsFileSystem.LOG.error("NeuFileInputStream.构造函数调用结束"+ " "+byteBuffer.length);
     }
 

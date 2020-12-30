@@ -26,7 +26,7 @@ public class FileInfo implements Serializable {
         this.offset = offset;
     }
 
-    long offset;
+    public long offset;
     public FileInfo(){
         super();
     }

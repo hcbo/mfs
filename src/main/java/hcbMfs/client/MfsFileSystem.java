@@ -24,11 +24,8 @@ import java.util.Properties;
 public class MfsFileSystem extends org.apache.hadoop.fs.FileSystem {
 
     public static final int FS_SEAWEED_DEFAULT_PORT = 8888;
-    public static final String FS_SEAWEED_FILER_HOST = "fs.seaweed.filer.host";
-    public static final String FS_SEAWEED_FILER_PORT = "fs.seaweed.filer.port";
 
     public static final Logger LOG = LoggerFactory.getLogger(MfsFileSystem.class);
-    private static int BUFFER_SIZE = 16 * 1024 * 1024;
 
     private URI uri;
     private Path workingDirectory = new Path("/");
@@ -43,13 +40,6 @@ public class MfsFileSystem extends org.apache.hadoop.fs.FileSystem {
 
     public CuratorFramework client;
 
-    AdminClient adminClient ;
-
-    KafkaProducer<String, byte[]> producer ;
-
-    String rootPath ;
-
-    Properties properties = new Properties();
 
 
     public String getScheme() {
@@ -63,37 +53,15 @@ public class MfsFileSystem extends org.apache.hadoop.fs.FileSystem {
 
         LOG.error("hcb "+"initialize方法"+uri+conf);
 
-//        // get host information from uri (overrides info in conf)
-//        String host = uri.getHost();
-//        host = (host == null) ? conf.get(FS_SEAWEED_FILER_HOST, "localhost") : host;
-//        if (host == null) {
-//            throw new IOException("Invalid host specified");
-//        }
-//        conf.set(FS_SEAWEED_FILER_HOST, host);
-//
-//        // get port information from uri, (overrides info in conf)
-//        int port = uri.getPort();
-//        port = (port == -1) ? FS_SEAWEED_DEFAULT_PORT : port;
-//        conf.setInt(FS_SEAWEED_FILER_PORT, port);
-//
-//        conf.setInt(IO_FILE_BUFFER_SIZE_KEY, BUFFER_SIZE);
-//
-//        setConf(conf);
         this.uri = uri;
-//
-//        seaweedFileSystemStore = new SeaweedFileSystemStore(host, port);
-         neuUnderFileSystem = new NeuUnderFileSystem(uri, conf);
+        neuUnderFileSystem = new NeuUnderFileSystem(uri, conf);
 
     }
 
     @Override
     public FSDataInputStream open(Path path, int bufferSize) throws IOException {
 
-
         LOG.error("open path: {} bufferSize:{}", path, bufferSize);
-
-//        path = qualify(path);
-
 
         try {
 

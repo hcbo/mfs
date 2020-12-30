@@ -64,12 +64,19 @@ public class NeuFileOutputStream extends OutputStream {
     @Override
     public void close() throws IOException {
         MfsFileSystem.LOG.error("NeuFileOutputStream.close()调用:"+"pathInfo.name"+pathInfo.name);
+        if(pointer == 0) {
+            MfsFileSystem.LOG.error("NeuFileOutputStream.close()提前结束");
+            return;
+        }
         // 写入kafka
         String[] topicPartition = getTopicPatition(pathInfo.name);
 
+        MfsFileSystem.LOG.error("file data to kafka time start path " + pathInfo.name + " " + System.currentTimeMillis());
 
         ProducerRecord record =
                 new ProducerRecord(topicPartition[0],Integer.parseInt(topicPartition[1]),pathInfo.name, Arrays.copyOf(byteBuffer,pointer));
+
+        MfsFileSystem.LOG.error("file data to kafka pointer " + pointer);
 
         Future<RecordMetadata> future = producer.send(record);
         // 下边这句代码必须有,会刷新缓存到主题.
@@ -82,12 +89,16 @@ public class NeuFileOutputStream extends OutputStream {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        producer.close();
+//        producer.close();
+        MfsFileSystem.LOG.error("file data to kafka time stop path " + pathInfo.name + " " + System.currentTimeMillis());
 
+
+        MfsFileSystem.LOG.error("file metadata to zk time start path " + pathInfo.name + " " +  System.currentTimeMillis());
 
         // 写元信息
         pathInfo.fileInfo.hasRenamed = false;
         pathInfo.fileInfo.offset = recordMetadata.offset();
+        MfsFileSystem.LOG.error("file metadata to zk offset " + pathInfo.fileInfo.offset);
         pathInfo.fileInfo.contentLength = pointer;
         pathInfo.lastModified = System.currentTimeMillis();
         pathInfo.fileInfo.contentHash = "";
@@ -101,6 +112,8 @@ public class NeuFileOutputStream extends OutputStream {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        MfsFileSystem.LOG.error("file metadata to zk time stop path " + pathInfo.name + " " + System.currentTimeMillis());
+
         MfsFileSystem.LOG.error("NeuFileOutputStream.close()调用完毕");
 
     }
@@ -152,17 +165,5 @@ public class NeuFileOutputStream extends OutputStream {
         return topicName.substring(1,topicName.length());
     }
 
-
-    private String renameFile(String path){
-//        if(path.endsWith("tmp")){
-//            int end = path.indexOf(".alluxio");
-//            str =  path.substring(0,end);
-//        }
-
-        if(path.contains("metadata")){
-            return "metadata";
-        }
-        return "hcb标记";
-    }
 
 }
