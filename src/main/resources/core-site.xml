@@ -6,8 +6,4 @@
     <name>fs.mfs.impl</name>
     <value>hcbMfs.client.MfsFileSystem</value>
 </property>
-<!--<property>-->
-    <!--<name>fs.defaultFS</name>-->
-    <!--<value>seaweedfs://localhost:8888</value>-->
-<!--</property>-->
 </configuration>

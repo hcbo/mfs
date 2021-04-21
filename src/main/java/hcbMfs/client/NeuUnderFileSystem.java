@@ -229,7 +229,7 @@ public class NeuUnderFileSystem  {
   public boolean exists(String path) throws IOException {
       MfsFileSystem.LOG.error("exists()方法执行 path="+path);
       String underPath = path;
-      if(path.contains(MfsFileSystem.FS_SEAWEED_DEFAULT_PORT+"")){
+      if(path.contains(MfsFileSystem.FS_MFS_DEFAULT_PORT+"")){
           underPath = stripPath(path);
       }
         try {
@@ -278,78 +278,7 @@ public class NeuUnderFileSystem  {
   }
 
 
-//  public List<String> getFileLocations(String path) throws IOException {
-//      MfsFileSystem.LOG.error("getFileLocations()方法执行 path="+path);
-//    List<String> ret = new ArrayList<>();
-//    ret.add(NetworkAddressUtils.getConnectHost(NetworkAddressUtils.ServiceType.WORKER_RPC, mUfsConf));
-//    return ret;
-//  }
 
-//
-//  public List<String> getFileLocations(String path, FileLocationOptions options)
-//      throws IOException {
-//    return getFileLocations(path);
-//  }
-
-
-//  public UfsFileStatus getFileStatus(String path) throws IOException {
-//      MfsFileSystem.LOG.error("getFileStatus()方法执行 path="+path);
-//    String underPath = stripPath(path);
-//    if(isFile(underPath)){
-//        byte[] output = new byte[0];
-//        try {
-//            output = client.getData().forPath(underPath);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        PathInfo pathInfo = (PathInfo) SerializationUtils.deserialize(output);
-//        return new UfsFileStatus(pathInfo.name,pathInfo.fileInfo.contentHash,
-//                pathInfo.fileInfo.contentLength,pathInfo.lastModified,
-//                pathInfo.owner,pathInfo.group,pathInfo.mode);
-//    }else {
-//        return null;
-//    }
-//  }
-
-//  @Override
-//  public long getSpace(String path, SpaceType type) throws IOException {
-//      MfsFileSystem.LOG.error("getSpace()方法执行 path="+path);
-//    if(type.getValue()==0){
-//      return 249849593856L;
-//    }else if (type.getValue()==2){
-//      return 105187893248L;
-//    }else {
-//      return 100000000000L;
-//    }
-//  }
-
-//  @Override
-//  public UfsStatus getStatus(String path) throws IOException {
-//      MfsFileSystem.LOG.error("getStatus()方法执行 path="+path);
-//      String underPath = stripPath(path);
-//      if(exists(underPath)){
-//          byte[] output = new byte[0];
-//          try {
-//              output = client.getData().forPath(underPath);
-//          } catch (Exception e) {
-//              e.printStackTrace();
-//          }
-//          PathInfo pathInfo = (PathInfo) SerializationUtils.deserialize(output);
-//
-//          if(isFile(underPath)){
-//              return new UfsFileStatus(pathInfo.name,pathInfo.fileInfo.contentHash,
-//                      pathInfo.fileInfo.contentLength,pathInfo.lastModified,
-//                      pathInfo.owner,pathInfo.group,pathInfo.mode);
-//          }else {
-//              return new UfsDirectoryStatus(pathInfo.name,pathInfo.owner,
-//                      pathInfo.group,pathInfo.mode,pathInfo.lastModified);
-//          }
-//      }else {
-//          return null;
-//      }
-//
-//
-//  }
 
 
   public boolean isDirectory(String path) throws IOException {
@@ -463,7 +392,7 @@ public class NeuUnderFileSystem  {
   }
 
     private String stripDirPath(String path) {
-        String divSign = MfsFileSystem.FS_SEAWEED_DEFAULT_PORT+"";
+        String divSign = MfsFileSystem.FS_MFS_DEFAULT_PORT+"";
         int begin = path.indexOf(divSign)+divSign.length();
 
         return path.substring(begin,path.length());
@@ -637,7 +566,6 @@ public class NeuUnderFileSystem  {
 //        }
 //    }
 //    else {
-//      //todo 增加其他的文件夹判断?
 //      return;
 //    }
 //  }
@@ -703,34 +631,10 @@ public class NeuUnderFileSystem  {
       return true;
   }
 
-//  @Override
-//  public void setOwner(String path, String user, String group) throws IOException {
-//
-//  }
-//
-//  @Override
-//  public void setMode(String path, short mode) throws IOException {
-//
-//  }
-//
-//  @Override
-//  public void connectFromMaster(String hostname) throws IOException {
-//  }
-//
-//  @Override
-//  public void connectFromWorker(String hostname) throws IOException {
-//  }
-//
-//  @Override
-//  public boolean supportsFlush() throws IOException {
-//    return false;
-//  }
-//
-//  @Override
-//  public void cleanup() {}
+
 
   /**
-   * Sleep and strip scheme from path.
+   * strip scheme from path.
    *
    * @param path the path to strip the scheme from
    * @return the path, with the optional scheme stripped away
@@ -738,7 +642,7 @@ public class NeuUnderFileSystem  {
   private String stripPath(String path) {
 //    MfsFileSystem.LOG.debug("Sleeping for configured interval");
 //    SleepUtils.sleepMs(mUfsConf.getMs(NeuUnderFileSystemPropertyKey.NEU_UFS_SLEEP));
-    String divSign = MfsFileSystem.FS_SEAWEED_DEFAULT_PORT+"";
+    String divSign = MfsFileSystem.FS_MFS_DEFAULT_PORT+"";
     int begin = path.indexOf(divSign)+divSign.length();
     int end = path.lastIndexOf("/");
     String dirPath = path.substring(begin,end+1);

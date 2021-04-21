@@ -23,7 +23,7 @@ import java.util.Properties;
 
 public class MfsFileSystem extends org.apache.hadoop.fs.FileSystem {
 
-    public static final int FS_SEAWEED_DEFAULT_PORT = 8888;
+    public static final int FS_MFS_DEFAULT_PORT = 8888;
 
     public static final Logger LOG = LoggerFactory.getLogger(MfsFileSystem.class);
 
@@ -114,15 +114,6 @@ public class MfsFileSystem extends org.apache.hadoop.fs.FileSystem {
     public FSDataOutputStream append(Path path, int bufferSize, Progressable progressable) throws IOException {
 
         LOG.error("append path: {} bufferSize:{}", path, bufferSize);
-
-//        path = qualify(path);
-//        try {
-//            OutputStream outputStream = seaweedFileSystemStore.createFile(path, false, null, bufferSize, "");
-//            return new FSDataOutputStream(outputStream, statistics);
-//        } catch (Exception ex) {
-//            LOG.warn("append path: {} bufferSize:{}", path, bufferSize, ex);
-//            return null;
-//        }
         return null;
     }
 
@@ -136,29 +127,6 @@ public class MfsFileSystem extends org.apache.hadoop.fs.FileSystem {
             e.printStackTrace();
         }
 
-//        if (src.isRoot()) {
-//            return false;
-//        }
-//
-//        if (src.equals(dst)) {
-//            return true;
-//        }
-//        FileStatus dstFileStatus = getFileStatus(dst);
-//
-//        String sourceFileName = src.getName();
-//        Path adjustedDst = dst;
-//
-//        if (dstFileStatus != null) {
-//            if (!dstFileStatus.isDirectory()) {
-//                return false;
-//            }
-//            adjustedDst = new Path(dst, sourceFileName);
-//        }
-//
-//        Path qualifiedSrcPath = qualify(src);
-//        Path qualifiedDstPath = qualify(adjustedDst);
-//
-//        seaweedFileSystemStore.rename(qualifiedSrcPath, qualifiedDstPath);
         return true;
     }
 
@@ -175,7 +143,7 @@ public class MfsFileSystem extends org.apache.hadoop.fs.FileSystem {
         }
         String deletePath = path.toString();
         if(path.toString().startsWith("mfs")){
-            String divSign = MfsFileSystem.FS_SEAWEED_DEFAULT_PORT+"";
+            String divSign = MfsFileSystem.FS_MFS_DEFAULT_PORT+"";
             int begin = deletePath.indexOf(divSign)+divSign.length();
             deletePath = deletePath.substring(begin);
         }
@@ -219,25 +187,6 @@ public class MfsFileSystem extends org.apache.hadoop.fs.FileSystem {
 
         LOG.error("SeaWeed.mkdirs path: {}", path);
 
-
-
-//        FileStatus fileStatus = getFileStatus(path);
-
-//        if (fileStatus == null) {
-//
-//            UserGroupInformation currentUser = UserGroupInformation.getCurrentUser();
-//            return seaweedFileSystemStore.createDirectory(path, currentUser,
-//                    fsPermission == null ? FsPermission.getDirDefault() : fsPermission,
-//                    FsPermission.getUMask(getConf()));
-//
-//        }
-//
-//        if (fileStatus.isDirectory()) {
-//            return true;
-//        } else {
-//            throw new FileAlreadyExistsException("Path is a file: " + path);
-//        }
-
         return neuUnderFileSystem.mkdirs(path.toString());
     }
 
@@ -265,7 +214,6 @@ public class MfsFileSystem extends org.apache.hadoop.fs.FileSystem {
         LOG.error("setOwner path: {}", path);
 //        path = qualify(path);
 //
-//        seaweedFileSystemStore.setOwner(path, owner, group);
     }
 
 
@@ -285,7 +233,6 @@ public class MfsFileSystem extends org.apache.hadoop.fs.FileSystem {
 
         path = qualify(path);
 
-//        seaweedFileSystemStore.setPermission(path, permission);
     }
 
     Path qualify(Path path) {
